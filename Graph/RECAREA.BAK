@@ -1,0 +1,56 @@
+#ifndef _RECAREA
+#define _RECAREA
+#include <graphics.h>
+#include <Graph/queue.cpp>
+void recboundaryFill4(int x,int y, int fill, int boundary){
+	int current;
+
+	current = getpixel(x,y);
+	if((current!=boundary) && (current != fill)){
+		setcolor(fill);
+		putpixel(x,y,fill);
+		recboundaryFill4(x+1,y,fill,boundary);//KANAN
+		recboundaryFill4(x-1,y,fill,boundary);//KIRI
+		recboundaryFill4(x,y+1,fill,boundary);//BAWAH
+		recboundaryFill4(x,y-1,fill,boundary);//ATAS
+	}
+}
+
+
+void boundaryFill4(int x,int y,int fill,int boundary){
+	int current;
+
+	MyQueue<int> Qx;
+	MyQueue<int> Qy;
+	Qx.push(x);
+	Qy.push(y);
+	while(!Qx.size()!=0){
+		putpixel(x,y,fill);
+		int xNow = Qx.front();
+		int yNow = Qy.front();
+		Qx.pop();
+		Qy.pop();
+		if((current!=boundary) && (current!=fill)){
+			putpixel(x,y,fill);
+
+			//TAMBAH KANAN
+			Qx.push(x+1);
+			Qy.push(y);
+
+			//TAMBAH KIRI
+			Qx.push(x-1);
+			Qy.push(y);
+
+			//TAMBAH BAWAH
+			Qx.push(x);
+			Qy.push(y+1);
+
+			//TAMBAH ATAS
+			Qx.push(x);
+			Qy.push(y-1);
+		}
+	}
+}
+
+
+#endif
