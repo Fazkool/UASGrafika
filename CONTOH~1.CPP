@@ -6,6 +6,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<conio.h>
+#include<Graph/RECAREA.CPP>
  
 union REGS i, o;
 int leftcolor[15];
@@ -156,7 +157,7 @@ main()
  
    setcolor(WHITE);
    settextstyle(SANS_SERIF_FONT,HORIZ_DIR,2);
-   outtextxy(maxx/2-180,maxy-28,"<a href="http://www.programmingsimplified.com"">www.programmingsimplified.com"</a>);
+   //outtextxy(maxx/2-180,maxy-28,"<a href="http://www.programmingsimplified.com"">www.programmingsimplified.com"</a>);
  
    draw_color_panel();
    draw_shape_panel();
@@ -195,6 +196,7 @@ main()
  
          if ( ch == 'f' )
          {
+			setcolor(WHITE);
             hidemouseptr();
             while( button == 1 )
             {
@@ -213,30 +215,42 @@ main()
          hidemouseptr();
  
          if( ch == 'p')
-            putpixel(x,y,getcolor());
+            putpixel(x,y,WHITE);
  
          else if ( ch == 'b' )
          {
-            setfillstyle(SOLID_FILL,getcolor());
-            bar(temp1,temp2,x,y);
-         }
-         else if ( ch == 'l')
-            line(temp1,temp2,x,y);
-         else if ( ch == 'e')
-            ellipse(temp1,temp2,0,360,abs(x-temp1),abs(y-temp2));
-         else if ( ch == 'r' )
-            rectangle(temp1,temp2,x,y);
-         else if ( ch == 'c' )
-         {
-            ch = 'f';          // setting to freehand drawing
-            clearviewport();
-            color = getcolor();
-            setcolor(WHITE);
-            rectangle(2,2,518,427);
-            setcolor(color);
-         }
- 
-         showmouseptr();
+			if (x > 2 && x < 518 && y > 2 && y < 427) 
+			{
+				boundaryFill4(x,y,getcolor(), WHITE);
+			}
+	 }
+	 else if ( ch == 'l')
+	 {
+	    setcolor(WHITE);
+	    line(temp1,temp2,x,y);
+	 }
+	 else if ( ch == 'e')
+	 {
+	    setcolor(WHITE);
+	    ellipse(temp1,temp2,0,360,abs(x-temp1),abs(y-temp2));
+	 }
+	 else if ( ch == 'r' )
+	 {
+	    setcolor(WHITE);
+	    rectangle(temp1,temp2,x,y);
+	 }
+	 else if ( ch == 'c' )
+
+	 {
+	    ch = 'f';          // setting to freehand drawing
+	    clearviewport();
+
+	    setcolor(WHITE);
+	    rectangle(2,2,518,427);
+
+	 }
+
+	 showmouseptr();
       }
    }
 }
