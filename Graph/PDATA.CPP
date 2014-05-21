@@ -1,0 +1,63 @@
+#include <iostream>
+
+using namespace std;
+class PDATA{
+	public :
+		//attribut
+		int Jenis;
+		//vector<int> titik;
+		int KodeWarna;
+		int x1,x2,x3,y1,y2,y3
+		PDATA();
+		//PDATA(int jenis , vector<int> Newtitik , int KW);
+		PDATA(int jenis , int KW);
+	
+		//function
+		void Draw();
+	
+	};	
+		//constructor
+		PDATA::PDATA(){
+			Jenis = 1;
+			KodeWarna = 0;
+		
+		}
+		PDATA::PDATA(int jenis , int KW){
+			Jenis = jenis;
+			KodeWarna = KW;
+		
+		}	
+		// PDATA::PDATA(int jenis , vector<int> Newtitik , int KW){
+			// Jenis = jenis;
+			// titik = Newtitik;
+			// KodeWarna = KW;
+		
+		// }
+		
+		void PDATA:: Draw(){
+			switch(Jenis){
+				case 0 :  //garis
+					
+					break;
+				case 1 : //kotak
+					
+					break;
+				
+			
+				default  :
+					//something
+			
+			}
+		}
+		
+
+int main(){
+
+PDATA a(1,2);
+
+cout<<"nilai jenis : "<< a.Jenis;
+
+
+
+return 0;
+}
