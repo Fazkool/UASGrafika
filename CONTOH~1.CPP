@@ -1,16 +1,41 @@
 
+
 #include<graphics.h>
 #include<dos.h>
 #include<math.h>
 #include<stdlib.h>
 #include<stdio.h>
 #include<conio.h>
-#include<Graph/RECAREA.CPP>
 #include<Graph/PDATA.CPP>
-
+#include<Graph/RECAREA.CPP>
+#include<Graph/PERSEGI.CPP>
+#include<Graph/DDA.CPP>
+#include<Graph/ELIPS3.CPP>
+ 
 union REGS i, o;
 int leftcolor[15];
- 
+    int cek=0;
+int color=0;
+int frame_length=1000;
+int arryX[500];
+int arryY[500];
+int arry_nX[500];
+int arry_nY[500];
+int arrx_nX[500];
+int arrx_nY[500];
+int arrxX[500];
+int arrxY[500];
+
+int COUNTERY;
+int COUNTERX;
+
+int pivot_x,pivot_y;
+
+int STORE_YLINE_X[200];
+int STORE_YLINE_Y[200];
+int STORE_XLINE_X[200];
+int STORE_XLINE_Y[200];
+float P[1][3],P1[1][3];
 int get_key()
 {
    union REGS i,o;
@@ -30,7 +55,7 @@ void draw_color_panel()
  
    color = getcolor();
    setcolor(GREEN);
-   rectangle(4,431,635,457);
+   DrawKotak(4,431,635,457);
    setcolor(RED);
    settextstyle(TRIPLEX_FONT,0,2);
    outtextxy(10,431,"Colors : ");
@@ -55,11 +80,11 @@ void draw_shape_panel()
  
    color = getcolor();
    setcolor(GREEN);
-   rectangle(525,40,633,255);
+   DrawKotak(525,40,633,255);
  
    for( c = 1 ; c <= 7 ; c++ )
    {
-      rectangle(left, top, left+100, top+25);
+      DrawKotak(left, top, left+100, top+25);
       top += 30;
    }
    setcolor(RED);
@@ -68,7 +93,33 @@ void draw_shape_panel()
    outtextxy(530,105,"Pixel");
    outtextxy(530,135,"Ellipse");
    outtextxy(530,165,"Freehand");
-   outtextxy(530,195,"Rectangle");
+   outtextxy(530,195,"DrawKotak");
+   outtextxy(530,225,"Clear");
+   setcolor(color);
+}
+void refresh()
+{
+   int left, top, c, color;
+ 
+   left = 529;
+   top = 45;
+ 
+   color = getcolor();
+   setcolor(GREEN);
+   DrawKotak(525,40,633,255);
+ 
+   for( c = 1 ; c <= 7 ; c++ )
+   {
+      DrawKotak(left, top, left+100, top+25);
+      top += 30;
+   }
+   setcolor(RED);
+   outtextxy(530,45,"tes");
+   outtextxy(530,75,"Line");
+   outtextxy(530,105,"Pixel");
+   outtextxy(530,135,"Ellipse");
+   outtextxy(530,165,"Freehand");
+   outtextxy(530,195,"DrawKotak");
    outtextxy(530,225,"Clear");
    setcolor(color);
 }
@@ -99,7 +150,10 @@ char change_shape(int x, int y)
    else if ( x > 529 && x < 625 && y > 165 && y < 190 )
       return 'f';
    else if ( x > 529 && x < 625 && y > 195 && y < 220 )
+   {
+   cek=0;
       return 'r';
+	}  
    else if ( x > 529 && x < 625 && y > 225 && y < 250 )
       return 'c';
    return '0';
@@ -116,7 +170,100 @@ void hidemouseptr()
    i.x.ax = 2;
    int86(0x33,&i,&o);
 }
- 
+
+
+void matrixIdentity(float T[3][3])
+{
+
+     int i,j;
+
+    /*  Make matrix T as Identity Matrix by
+    Storing 1 in the left diagonal positions of Matrix T
+    and store 0 in other positions  */
+
+     for(i=0;i<3;i++)
+     {
+     for(j=0;j<3;j++)
+     {
+	 if(i==j)
+	   T[i][j]=1;
+	 else
+	   T[i][j]=0;
+
+      }
+
+     }
+
+
+}
+
+
+
+void matrixMul(float P[1][3],float T[3][3])
+{
+
+     int i,j,k;
+
+     //Initialize Matrix P1 with Zero
+     for(i=0;i<3;i++)
+	 P1[0][i]=0;
+
+     //Mutiply T with P and store the result in P1
+     for(k=0;k<1;k++)
+       for(i=0;i<3;i++)
+       for(j=0;j<3;j++)
+	P1[k][i]+=P[k][j]*T[j][i];
+	
+}
+
+ void translate_point(int x,int y,int tx,int ty)
+//Translate a point by translation factors tx,ty
+{
+
+     float T[3][3];
+     matrixIdentity(T);
+     T[2][0]=tx;
+     T[2][1]=ty;
+
+     P[0][0]=x;
+     P[0][1]=y;
+     P[0][2]=1;
+
+     matrixMul(P,T);
+}
+void scale_point(int x,int y,float sx,float sy)
+/* Scale a point by scaling factors sx,sy and
+   with respect to some fixed point  */
+{
+
+      float S[3][3];
+      matrixIdentity(S);
+
+      S[0][0]=sx;
+      S[2][0]=(1-sx)*pivot_x;
+      S[1][1]=sy;
+      S[2][1]=(1-sy)*pivot_y;
+
+      P[0][0]=x;
+      P[0][1]=y;
+      P[0][2]=1;
+
+      matrixMul(P,S);
+
+}
+
+void reflect_point_Y(int x,int y)
+{
+	cout<<"x "<<x<<"y "<<y;
+     float R[3][3];
+     matrixIdentity(R);
+     R[0][0]=-1;
+     P[0][0]=x;
+     P[0][1]=y;
+     P[0][2]=1;
+     matrixMul(P,R);
+}
+
 void restrictmouseptr( int x1, int y1, int x2, int y2)
 {
    i.x.ax = 7;
@@ -140,12 +287,13 @@ void getmousepos(int *button,int *x,int *y)
    *y = o.x.dx;
 }
  
-main()
+int main()
 {
    int gd = DETECT,gm;
-	PDATA dataQueue[1000];
-	int maxQueue = 1000;
-	int count=0;
+   int cek2=0;
+   PDATA dataQueue[1000];
+   int maxQueue = 1000;
+   int count=0;
    int maxx,maxy,x,y,button,prevx,prevy,temp1,temp2,key,color;
    char ch = 'f' ;            // default free-hand drawing
  
@@ -155,22 +303,22 @@ main()
    maxy = getmaxy();
  
    setcolor(BLUE);
-   rectangle(0,0,maxx,maxy);
+   DrawKotak(0,0,maxx,maxy);
  
    setcolor(WHITE);
    settextstyle(SANS_SERIF_FONT,HORIZ_DIR,2);
    //outtextxy(maxx/2-180,maxy-28,"<a href="http://www.programmingsimplified.com"">www.programmingsimplified.com"</a>);
  
    draw_color_panel();
-   draw_shape_panel();
+   refresh();
  
    setviewport(1,1,maxx-1,maxy-1,1);
  
    restrictmouseptr(1,1,maxx-1,maxy-1);
    showmouseptr();
-   rectangle(2,2,518,427);
+   DrawKotak(2,2,518,427);
    setviewport(1,1,519,428,1);
- 
+
    while(1)
    {
       if(kbhit())
@@ -182,6 +330,10 @@ main()
             closegraph();
             exit(0);
          }
+		 else
+		 {
+			printf("%d",key);
+		 }
       }
  
       getmousepos(&button,&x,&y);
@@ -189,31 +341,44 @@ main()
       if( button == 1 )
       {
          if( x > 4 && x < 635 && y > 431 && y < 457 )
-            change_color( x, y );
+		 {
+             change_color( x, y );
+			 cek2=1;
+	     }
          else if ( x > 529 && x < 625 && y > 40 && y < 250 )
+		 {
              ch = change_shape( x, y );
- 
+			 cek2=1;
+		 }
+		 else
+		 {
+			cek2=0;
+		 }
          temp1 = x ;
          temp2 = y ;
- 
+		if ( ch == 'c' )
+		{
+	    ch = 'f';          // setting to freehand drawing
+	    clearviewport();
+
+	    setcolor(WHITE);
+	    DrawKotak(2,2,518,427);
+		
+		} 
+		 if(cek2!=1)
+		 {
          if ( ch == 'f' )
          {
 			setcolor(WHITE);
             hidemouseptr();
             while( button == 1 )
             {
-               line(temp1,temp2,x,y);
+               lineDDA(temp1,temp2,x,y);
                temp1 = x;
                temp2 = y;
                getmousepos(&button,&x,&y);
             }
             showmouseptr();
-			PDATA temp(0,0);
-			if(count<maxQueue){
-				dataQueue[count]= temp;
-				count++;
-			}
-			//dataQueue.push_back(temp);
 			
          }
  
@@ -232,35 +397,135 @@ main()
 			{
 				boundaryFill4(x,y,getcolor(), WHITE);
 			}
-	 }
-	 else if ( ch == 'l')
-	 {
+		}
+		else if ( ch == 'l')
+		{
 	    setcolor(WHITE);
-	    line(temp1,temp2,x,y);
-	 }
-	 else if ( ch == 'e')
-	 {
-	    setcolor(WHITE);
-	    ellipse(temp1,temp2,0,360,abs(x-temp1),abs(y-temp2));
+	    lineDDA(temp1,temp2,x,y);
 		
-	 }
-	 else if ( ch == 'r' )
-	 {
+		PDATA temp(0,0);
+		temp.x1 = temp1;
+		temp.y1 = temp2;
+		temp.x2 = x;
+		temp.y2 = y;
+		
+				if(count<maxQueue){
+					dataQueue[count]= temp;
+					count++;
+				}
+		}
+		else if ( ch == 'e')
+		{
 	    setcolor(WHITE);
-	    rectangle(temp1,temp2,x,y);
-	 }
-	 else if ( ch == 'c' )
-	 {
-	    ch = 'f';          // setting to freehand drawing
-	    clearviewport();
+	    elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+		PDATA temp(2,0);
+		temp.x1 = temp1;
+		temp.y1 = temp2;
+		temp.x2 = abs(x-temp1);
+		temp.y2 = abs(y-temp2);
+		if(count<maxQueue){
+			dataQueue[count]= temp;
+			count++;
+		}
+	
+		}
+		else if ( ch == 'r' )
+		{
 	    setcolor(WHITE);
-	    rectangle(2,2,518,427);
+	    DrawKotak1(x, temp2, temp1,temp2, temp1, y,x,y);	
+			while(!kbhit())
+			  {
+				 key = get_key();
+		 
+				 if( key == 28 ) //jika ditekan enter
+				 {
+					PDATA temp(1,0);
+					temp.x1 = temp1;
+					temp.y1 = temp2;
+					temp.x2 = x;
+					temp.y2 = y;
+					if(count<maxQueue){
+						dataQueue[count]= temp;
+						count++;
+					}					
+					break;
+				 }
+				 else if(key==51)
+				 {
+					
+					
+					scale_point(x,y,1.1,1.1);
+					x=P1[0][0];
+					y=P1[0][1];
+					DrawKotak1(x, temp2, temp1,temp2, temp1, y,x,y);
+					printf("rotate X");
+				 }
+				 else if(key==52)//jika di tekan .
+				 {
+										
+					scale_point(x,y,0.9,0.9);
+					x=P1[0][0];
+					y=P1[0][1];
+					DrawKotak1(x, temp2, temp1,temp2, temp1, y,x,y);
+					printf("rotate Y");
+				 }
+				 else if(key==77)//jika tombol kanan ditekan
+				 {					
+					translate_point(temp1,temp2,1,0);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,1,0);
+					x=P1[0][0];
+					y=P1[0][1];
+					
+					DrawKotak(temp1,temp2,x,y);
+
+				 }
+				 else if(key==80)//jika tombol kanan ditekan
+				 {					
+					translate_point(temp1,temp2,0,1);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,0,1);
+					x=P1[0][0];
+					y=P1[0][1];
+					
+					DrawKotak(temp1,temp2,x,y);
+
+				 }
+				 else if(key==72)//jika tombol kanan ditekan
+				 {					
+					translate_point(temp1,temp2,0,-1);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,0,-1);
+					x=P1[0][0];
+					y=P1[0][1];
+					
+					DrawKotak(temp1,temp2,x,y);
+
+				 }
+				 else if(key==75)//jika tombol kanan ditekan
+				 {					
+					translate_point(temp1,temp2,-1,0);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,-1,0);
+					x=P1[0][0];
+					y=P1[0][1];
+					DrawKotak(temp1,temp2,x,y);
+
+				 }
+				 
+			  }
 
 	 }
+		
 
 	 showmouseptr();
-	 cout<<"isi queue : "<<count<<"/n";
-
+	 cout<<"isi queue : "<<count<<"\n";
     }
+	}
+
    }
 }
