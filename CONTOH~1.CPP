@@ -1,5 +1,4 @@
 
-
 #include<graphics.h>
 #include<dos.h>
 #include<math.h>
@@ -7,7 +6,8 @@
 #include<stdio.h>
 #include<conio.h>
 #include<Graph/RECAREA.CPP>
- 
+#include<Graph/PDATA.CPP>
+
 union REGS i, o;
 int leftcolor[15];
  
@@ -143,7 +143,9 @@ void getmousepos(int *button,int *x,int *y)
 main()
 {
    int gd = DETECT,gm;
- 
+	PDATA dataQueue[1000];
+	int maxQueue = 1000;
+	int count=0;
    int maxx,maxy,x,y,button,prevx,prevy,temp1,temp2,key,color;
    char ch = 'f' ;            // default free-hand drawing
  
@@ -206,6 +208,13 @@ main()
                getmousepos(&button,&x,&y);
             }
             showmouseptr();
+			PDATA temp(0,0);
+			if(count<maxQueue){
+				dataQueue[count]= temp;
+				count++;
+			}
+			//dataQueue.push_back(temp);
+			
          }
  
          while( button == 1)
@@ -233,6 +242,7 @@ main()
 	 {
 	    setcolor(WHITE);
 	    ellipse(temp1,temp2,0,360,abs(x-temp1),abs(y-temp2));
+		
 	 }
 	 else if ( ch == 'r' )
 	 {
@@ -240,17 +250,17 @@ main()
 	    rectangle(temp1,temp2,x,y);
 	 }
 	 else if ( ch == 'c' )
-
 	 {
 	    ch = 'f';          // setting to freehand drawing
 	    clearviewport();
-
 	    setcolor(WHITE);
 	    rectangle(2,2,518,427);
 
 	 }
 
 	 showmouseptr();
-      }
+	 cout<<"isi queue : "<<count<<"/n";
+
+    }
    }
 }
