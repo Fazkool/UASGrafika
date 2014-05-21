@@ -10,8 +10,7 @@
 #include<Graph/RECAREA.CPP>
 #include<Graph/PERSEGI.CPP>
 #include<Graph/DDA.CPP>
-#include<Graph/ELIPS3.CPP>
- 
+
 union REGS i, o;
 int leftcolor[15];
     int cek=0;
@@ -358,12 +357,17 @@ int main()
          temp2 = y ;
 		if ( ch == 'c' )
 		{
-	    ch = 'f';          // setting to freehand drawing
-	    clearviewport();
+			ch = 'f';          // setting to freehand drawing
+			clearviewport();
 
-	    setcolor(WHITE);
-	    DrawKotak(2,2,518,427);
-		
+			setcolor(WHITE);
+			DrawKotak(2,2,518,427);
+			
+			for(int i=0;i<count;i++){
+				
+				dataQueue[i].Draw();
+			
+			}
 		} 
 		 if(cek2!=1)
 		 {
@@ -396,6 +400,13 @@ int main()
 			if (x > 2 && x < 518 && y > 2 && y < 427) 
 			{
 				boundaryFill4(x,y,getcolor(), WHITE);
+				if(count<maxQueue){
+					PDATA temp(3,getcolor());
+					temp.x1 =x;
+					temp.y1 =y;
+					dataQueue[count]= temp;
+					count++;
+				}
 			}
 		}
 		else if ( ch == 'l')
@@ -417,7 +428,7 @@ int main()
 		else if ( ch == 'e')
 		{
 	    setcolor(WHITE);
-	    elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+	    //elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
 		PDATA temp(2,0);
 		temp.x1 = temp1;
 		temp.y1 = temp2;
@@ -440,16 +451,21 @@ int main()
 				 if( key == 28 ) //jika ditekan enter
 				 {
 					PDATA temp(1,0);
-					temp.x1 = temp1;
+					temp.x1 = x;
 					temp.y1 = temp2;
-					temp.x2 = x;
-					temp.y2 = y;
+					temp.x2 = temp1;
+					temp.y2 = temp2;
+					temp.x3 = temp1;
+					temp.y3 = y;
+					temp.x4 = x;
+					temp.y4 = y;
 					if(count<maxQueue){
 						dataQueue[count]= temp;
 						count++;
 					}					
 					break;
 				 }
+				 
 				 else if(key==51)
 				 {
 					
