@@ -1,0 +1,29 @@
+diff a/Graph/CLIP.CPP b/Graph/CLIP.CPP	(rejected hunks)
+@@ -154,19 +155,20 @@
+ 		}
+ 	}
+ 	
+-}
++}*/
+ 
+-void clipp(int xStart,int yStart,int xEnd,int yEnd){
+-	for(int j = 0;j<479;j++){
+-		for(int i = 0;i<639;i++){
+-			if(i < xStart || i >xEnd || j < yStart || j>yEnd ){
++void clipp(int xStart,int yStart,int xEnd,int yEnd){	
++	for(int j = 3;j<426;j++){
++		for(int i = 3;i<517;i++){
++			if(i < xStart || i >xEnd || j < yStart || j>yEnd )
+ 				putpixel(i,j,BLACK);
+-			}
++				
++			
+ 		}
+ 	}
+ }
+ 
+-void main()
++/*void main()
+ {
+ 	//draw_rectangle(100,100,300,300);
+ 	int gd=DETECT,gm;

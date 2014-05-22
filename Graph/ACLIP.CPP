@@ -2,9 +2,7 @@
 #include<conio.h>
 #include<graphics.h>
 #include<math.h>
-#include<Graph/RECAREA.CPP>
-#include<Graph/DDA.CPP>
-#include<Graph/ELIPS3.CPP>
+
 
 void elips2(long int xcenter,long int ycenter,long int xradius,long int yradius)
 {
@@ -156,7 +154,7 @@ void aClipElips(long int xcenter,long int ycenter,long int stangle,long int enda
 	ellipse(xcenter,ycenter,0 , 360, xradius, yradius);
 }
 
-void main()
+/*void main()
 {
 	//draw_rectangle(100,100,300,300);
 
@@ -173,4 +171,4 @@ void main()
 	//aClipKotak(100,200,100,100,200,100,200,200);
 
 	getch();
-}
+}*/

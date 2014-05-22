@@ -11,6 +11,8 @@
 #include<Graph/PERSEGI.CPP>
 #include<Graph/ELIPS3.CPP>
 #include<Graph/DDA.CPP>
+#include<Graph/CLIP.CPP>
+#include<Graph/ACLIP.CPP>
 
 union REGS i, o;
 int leftcolor[15];
@@ -58,7 +60,7 @@ void draw_color_panel()
    DrawKotak(4,431,635,457);
    setcolor(RED);
    settextstyle(TRIPLEX_FONT,0,2);
-   outtextxy(10,431,"Colors : ");
+   outtextxy(10,431,"FILL : ");
  
    for( c = 1 ; c <= 15 ; c++ )
    {
@@ -111,7 +113,7 @@ void draw_shape_panel()
    outtextxy(530,225,"Clear"); */
    setcolor(color);
 }
-void refresh()
+void refresh(int toggle)
 {
     int left, top, c, color;
 
@@ -133,16 +135,18 @@ void refresh()
    DrawKotak(left, top, left+100, top+25);
    top += 30;
    DrawKotak(left, top, left+100, top+25);
-   top += 30;
    boundaryFill4(550,50, RED, WHITE);
    DrawKotak(550, 83, 558, 91);
    lineDDA(585, 50, 625, 65);
    boundaryFill4(555,87, WHITE, WHITE);
    elips(605, 87, 10, 10);
    DrawKotak(584, 109, 625, 126);
+   if (toggle == 1)
+   boundaryFill4(600,115, GREEN, WHITE);
    outtextxy(550,135,"CLEAR");
    outtextxy(550,165,"CLIP");
    outtextxy(550,195,"ACLIP");
+ 
    setcolor(RED);
   /* outtextxy(530,45,"tes");
    outtextxy(530,75,"Line");
@@ -187,9 +191,12 @@ char change_shape(int x, int y)
    else if ( x > 529 && x < 625 && y > 135 && y < 160 )
       return 'c';
    else if ( x > 529 && x < 625 && y > 165 && y < 190 )
-      return 'p';
+      return 'k';
    else if ( x > 529 && x < 625 && y > 195 && y < 220 )
       return 'a';
+   
+   
+      
    return '0';
 }
  
@@ -346,6 +353,7 @@ void getmousepos(int *button,int *x,int *y)
  
 int main()
 {
+	int toggle=0;
    int gd = DETECT,gm;
    int cek2=0;
    PDATA dataQueue[100];
@@ -367,7 +375,7 @@ int main()
    //outtextxy(maxx/2-180,maxy-28,"<a href="http://www.programmingsimplified.com"">www.programmingsimplified.com"</a>);
  
    draw_color_panel();
-   refresh();
+   refresh(toggle);
  
    setviewport(1,1,maxx-1,maxy-1,1);
  
@@ -387,7 +395,7 @@ int main()
             closegraph();
             exit(0);
          }
-		/* else
+		/*else
 		 {
 			printf("%d",key);
 		 }*/
@@ -411,6 +419,8 @@ int main()
 		 {
 			cek2=0;
 		 }
+		 
+				   
          temp1 = x ;
          temp2 = y ;
 		if ( ch == 'c' )
@@ -1119,17 +1129,45 @@ int main()
 			  }
 
 	 }
-			else if(ch == 'p') {
+			else if(ch == 'k') {
+					PDATA temp(4,0);
+					temp.x1 = temp1;
+					temp.y1 = temp2;
+					temp.x2 = x;
+					temp.y2 = y;
+					if(count<maxQueue){
+						dataQueue[count]= temp;
+						count++;
+					}
+				clipp(temp1,temp2, x, y);	
 			}
-			
 			else if(ch == 'a') {
+			  if (toggle == 0) {
+				   toggle = 1;
+				   printf("TOGGLE ON");
+				   
+				   }
+				else if (toggle == 1) {
+				   toggle = 0;
+				   printf("TOGGLE OFF");
+				   
+				   }
+				   }
 			
-			}
+			
+			
+			
 
 	 showmouseptr();
 	 cout<<"isi queue : "<<count<<"\n";
     }
 	}
+	
+
 
    }
+   
+	
+		
+				   
 }
