@@ -73,54 +73,72 @@ void draw_color_panel()
  
 void draw_shape_panel()
 {
-   int left, top, c, color;
- 
+    int left, top, c, color;
+
    left = 529;
    top = 45;
- 
+
    color = getcolor();
    setcolor(GREEN);
    DrawKotak(525,40,633,255);
- 
-   for( c = 1 ; c <= 7 ; c++ )
+
+   for( c = 1 ; c <= 3 ; c++ )
    {
-      DrawKotak(left, top, left+100, top+25);
+      DrawKotak(left, top, left+49, top+25);
+	  DrawKotak(left+51, top, left+100, top+25);
       top += 30;
    }
+   DrawKotak(left, top, left+100, top+25);
+   boundaryFill4(550,50, RED, WHITE);
+   DrawKotak(550, 83, 558, 91);
+   lineDDA(585, 50, 625, 65);
+   boundaryFill4(555,87, WHITE, WHITE);
+   elips(605, 87, 10, 10);
+   DrawKotak(584, 109, 625, 126);
+   outtextxy(550,135,"CLEAR");
    setcolor(RED);
-   outtextxy(530,45,"Bar");
+  /* outtextxy(530,45,"tes");
    outtextxy(530,75,"Line");
    outtextxy(530,105,"Pixel");
    outtextxy(530,135,"Ellipse");
    outtextxy(530,165,"Freehand");
    outtextxy(530,195,"DrawKotak");
-   outtextxy(530,225,"Clear");
+   outtextxy(530,225,"Clear"); */
    setcolor(color);
 }
 void refresh()
 {
-   int left, top, c, color;
- 
+    int left, top, c, color;
+
    left = 529;
    top = 45;
- 
+
    color = getcolor();
    setcolor(GREEN);
    DrawKotak(525,40,633,255);
- 
-   for( c = 1 ; c <= 7 ; c++ )
+
+   for( c = 1 ; c <= 3 ; c++ )
    {
-      DrawKotak(left, top, left+100, top+25);
+      DrawKotak(left, top, left+49, top+25);
+	  DrawKotak(left+51, top, left+100, top+25);
       top += 30;
    }
+   DrawKotak(left, top, left+100, top+25);
+   boundaryFill4(550,50, RED, WHITE);
+   DrawKotak(550, 83, 558, 91);
+   lineDDA(585, 50, 625, 65);
+   boundaryFill4(555,87, WHITE, WHITE);
+   elips(605, 87, 10, 10);
+   DrawKotak(584, 109, 625, 126);
+   outtextxy(550,135,"CLEAR");
    setcolor(RED);
-   outtextxy(530,45,"tes");
+  /* outtextxy(530,45,"tes");
    outtextxy(530,75,"Line");
    outtextxy(530,105,"Pixel");
    outtextxy(530,135,"Ellipse");
    outtextxy(530,165,"Freehand");
    outtextxy(530,195,"DrawKotak");
-   outtextxy(530,225,"Clear");
+   outtextxy(530,225,"Clear"); */
    setcolor(color);
 }
  
@@ -139,22 +157,22 @@ void change_color(int x, int y)
  
 char change_shape(int x, int y)
 {
-   if ( x > 529 && x < 625 && y > 45 && y < 70 )
+     if ( x > 529 && x < 578 && y > 45 && y < 70 )
       return 'b';
-   else if ( x > 529 && x < 625 && y > 75 && y < 100 )
+   else if ( x > 580 && x < 629 && y > 45 && y < 70 )
       return 'l';
-   else if ( x > 529 && x < 625 && y > 105 && y < 130 )
+   else if ( x > 529 && x < 578 && y > 75 && y < 100 )
       return 'p';
-   else if ( x > 529 && x < 625 && y > 135 && y < 160 )
+   else if ( x > 580 && x < 629 && y > 75 && y < 100 )
       return 'e';
-   else if ( x > 529 && x < 625 && y > 165 && y < 190 )
+   else if ( x > 529 && x < 578 && y > 105 && y < 130 )
       return 'f';
-   else if ( x > 529 && x < 625 && y > 195 && y < 220 )
+   else if ( x > 580 && x < 629 && y > 105 && y < 130 )
    {
    cek=0;
       return 'r';
-	}  
-   else if ( x > 529 && x < 625 && y > 225 && y < 250 )
+	}
+   else if ( x > 529 && x < 625 && y > 135 && y < 170 )
       return 'c';
    return '0';
 }
