@@ -9,6 +9,7 @@
 #include<Graph/PDATA.CPP>
 #include<Graph/RECAREA.CPP>
 #include<Graph/PERSEGI.CPP>
+#include<Graph/ELIPS3.CPP>
 #include<Graph/DDA.CPP>
 
 union REGS i, o;
@@ -251,6 +252,29 @@ void scale_point(int x,int y,float sx,float sy)
 
 }
 
+void rotate_point(int x,int y,float angle)
+// Rotate a point by given angle
+{
+	
+     float R[3][3];
+     float radian;
+	angle*=-1;
+     radian=(3.141/180)*angle;
+     matrixIdentity(R);
+
+     R[0][0]=cos(radian);
+     R[1][0]=-1*sin(radian);
+     R[2][0]=pivot_x*(1-cos(radian))+pivot_y*sin(radian);
+     R[0][1]=sin(radian);
+     R[1][1]=cos(radian);
+     R[2][1]=pivot_y*(1-cos(radian))-pivot_x*sin(radian);
+
+     P[0][0]=x;
+     P[0][1]=y;
+     P[0][2]=1;
+     matrixMul(P,R);
+
+}
 void reflect_point_Y(int x,int y)
 {
 	cout<<"x "<<x<<"y "<<y;
@@ -290,7 +314,7 @@ int main()
 {
    int gd = DETECT,gm;
    int cek2=0;
-   PDATA dataQueue[1000];
+   PDATA dataQueue[100];
    int maxQueue = 1000;
    int count=0;
    int maxx,maxy,x,y,button,prevx,prevy,temp1,temp2,key,color;
@@ -362,12 +386,12 @@ int main()
 
 			setcolor(WHITE);
 			DrawKotak(2,2,518,427);
-			
-			for(int i=0;i<count;i++){
+			count=0;
+			// for(int i=0;i<count;i++){
 				
-				dataQueue[i].Draw();
+				// dataQueue[i].Draw();
 			
-			}
+			// }
 		} 
 		 if(cek2!=1)
 		 {
@@ -413,80 +437,119 @@ int main()
 		{
 	    setcolor(WHITE);
 	    lineDDA(temp1,temp2,x,y);
-		
-		PDATA temp(0,0);
-		temp.x1 = temp1;
-		temp.y1 = temp2;
-		temp.x2 = x;
-		temp.y2 = y;
-		
-				if(count<maxQueue){
-					dataQueue[count]= temp;
-					count++;
-				}
-		}
-		else if ( ch == 'e')
-		{
-	    setcolor(WHITE);
-	    //elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
-		PDATA temp(2,0);
-		temp.x1 = temp1;
-		temp.y1 = temp2;
-		temp.x2 = abs(x-temp1);
-		temp.y2 = abs(y-temp2);
-		if(count<maxQueue){
-			dataQueue[count]= temp;
-			count++;
-		}
-	
-		}
-		else if ( ch == 'r' )
-		{
-	    setcolor(WHITE);
-	    DrawKotak1(x, temp2, temp1,temp2, temp1, y,x,y);	
-			while(!kbhit())
+		while(!kbhit())
 			  {
 				 key = get_key();
 		 
 				 if( key == 28 ) //jika ditekan enter
 				 {
-					PDATA temp(1,0);
-					temp.x1 = x;
+					PDATA temp(0,0);
+					temp.x1 = temp1;
 					temp.y1 = temp2;
-					temp.x2 = temp1;
-					temp.y2 = temp2;
-					temp.x3 = temp1;
-					temp.y3 = y;
-					temp.x4 = x;
-					temp.y4 = y;
+					temp.x2 = x;
+					temp.y2 = y;
+		
 					if(count<maxQueue){
 						dataQueue[count]= temp;
 						count++;
-					}					
+					}		
 					break;
 				 }
 				 
-				 else if(key==51)
+				 else if(key==73)
 				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
 					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
 					
+					}
+					
+					pivot_x=temp1;
+					pivot_y=temp2;
 					scale_point(x,y,1.1,1.1);
 					x=P1[0][0];
 					y=P1[0][1];
-					DrawKotak1(x, temp2, temp1,temp2, temp1, y,x,y);
-					printf("rotate X");
+					lineDDA(temp1,temp2,x,y);
+					 
 				 }
-				 else if(key==52)//jika di tekan .
+				 else if(key==81)//jika di tekan .
 				 {
-										
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}					
+					
+					pivot_x=temp1;
+					pivot_y=temp2;
 					scale_point(x,y,0.9,0.9);
 					x=P1[0][0];
 					y=P1[0][1];
-					DrawKotak1(x, temp2, temp1,temp2, temp1, y,x,y);
-					printf("rotate Y");
+					lineDDA(temp1,temp2,x,y);
+					 
+				 }
+				 else if(key==51)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=temp1;
+					pivot_y=temp2;
+					rotate_point(x,y,-45);
+					x=P1[0][0];
+					y=P1[0][1];
+					lineDDA(temp1,temp2,x,y);
+					 
+				 }
+				 else if(key==52)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=temp1;
+					pivot_y=temp2;
+					rotate_point(x,y,45);
+					x=P1[0][0];
+					y=P1[0][1];
+					lineDDA(temp1,temp2,x,y);
+					 
 				 }
 				 else if(key==77)//jika tombol kanan ditekan
-				 {					
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
 					translate_point(temp1,temp2,1,0);
 					temp1=P1[0][0];
 					temp2=P1[0][1];
@@ -494,11 +557,21 @@ int main()
 					x=P1[0][0];
 					y=P1[0][1];
 					
-					DrawKotak(temp1,temp2,x,y);
+					lineDDA(temp1,temp2,x,y);
 
 				 }
 				 else if(key==80)//jika tombol kanan ditekan
-				 {					
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
 					translate_point(temp1,temp2,0,1);
 					temp1=P1[0][0];
 					temp2=P1[0][1];
@@ -506,11 +579,21 @@ int main()
 					x=P1[0][0];
 					y=P1[0][1];
 					
-					DrawKotak(temp1,temp2,x,y);
+					lineDDA(temp1,temp2,x,y);
 
 				 }
 				 else if(key==72)//jika tombol kanan ditekan
-				 {					
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
 					translate_point(temp1,temp2,0,-1);
 					temp1=P1[0][0];
 					temp2=P1[0][1];
@@ -518,18 +601,484 @@ int main()
 					x=P1[0][0];
 					y=P1[0][1];
 					
-					DrawKotak(temp1,temp2,x,y);
+					lineDDA(temp1,temp2,x,y);
 
 				 }
 				 else if(key==75)//jika tombol kanan ditekan
-				 {					
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
 					translate_point(temp1,temp2,-1,0);
 					temp1=P1[0][0];
 					temp2=P1[0][1];
 					translate_point(x,y,-1,0);
 					x=P1[0][0];
 					y=P1[0][1];
-					DrawKotak(temp1,temp2,x,y);
+					lineDDA(temp1,temp2,x,y);
+
+				 }
+				 
+			  }
+		
+		}
+		else if ( ch == 'e')
+		{
+		
+	    setcolor(WHITE);
+	    elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+		while(!kbhit())
+			  {
+				 key = get_key();
+		 
+				 if( key == 28 ) //jika ditekan enter
+				 {
+					
+					PDATA temp(2,0);
+					temp.x1 = temp1;
+					temp.y1 = temp2;
+					temp.x2 = abs(x-temp1);
+					temp.y2 = abs(y-temp2);
+					if(count<maxQueue){
+						dataQueue[count]= temp;
+						count++;
+					}			
+					break;
+				 }
+				 
+				 else if(key==73)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					
+					pivot_x=temp1;
+					pivot_y=temp2;
+					scale_point(x,y,1.1,1.1);
+					x=P1[0][0];
+					y=P1[0][1];
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+					 
+				 }
+				 else if(key==81)//jika di tekan .
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}					
+					
+					pivot_x=temp1;
+					pivot_y=temp2;
+					scale_point(x,y,0.9,0.9);
+					x=P1[0][0];
+					y=P1[0][1];
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+					 
+				 }
+				 else if(key==51)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=temp1;
+					pivot_y=temp2;
+					rotate_point(x,y,-90);
+					x=P1[0][0];
+					y=P1[0][1];
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+					 
+				 }
+				 else if(key==52)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=temp1;
+					pivot_y=temp2;
+					rotate_point(x,y,90);
+					x=P1[0][0];
+					y=P1[0][1];
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+					 
+				 }
+				 else if(key==77)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					translate_point(temp1,temp2,1,0);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,1,0);
+					x=P1[0][0];
+					y=P1[0][1];
+					
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+
+				 }
+				 else if(key==80)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
+					translate_point(temp1,temp2,0,1);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,0,1);
+					x=P1[0][0];
+					y=P1[0][1];
+					
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+
+				 }
+				 else if(key==72)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
+					translate_point(temp1,temp2,0,-1);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,0,-1);
+					x=P1[0][0];
+					y=P1[0][1];
+					
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+
+				 }
+				 else if(key==75)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
+					translate_point(temp1,temp2,-1,0);
+					temp1=P1[0][0];
+					temp2=P1[0][1];
+					translate_point(x,y,-1,0);
+					x=P1[0][0];
+					y=P1[0][1];
+					elips(temp1,temp2,abs(x-temp1),abs(y-temp2));
+
+				 }
+				 
+			  }
+	
+		}
+		else if ( ch == 'r' )
+		{
+	    setcolor(WHITE);
+		int x1,x2,x3,x4,y1,y2,y3,y4;
+		x1=x;
+		y1=temp2;
+		x2=temp1;
+		y2=temp2;
+		x3=temp1;
+		y3=y;
+		x4=x;
+		y4=y;
+	    DrawKotak1(x1, y1, x2,y2,x3,y3,x4,y4);	
+			while(!kbhit())
+			  {
+				 key = get_key();
+		 
+				 if( key == 28 ) //jika ditekan enter
+				 {
+					PDATA temp(1,0);
+					temp.x1 = x1;
+					temp.y1 = y1;
+					temp.x2 = x2;
+					temp.y2 = y2;
+					temp.x3 = x3;
+					temp.y3 = y3;
+					temp.x4 = x4;
+					temp.y4 = y4;
+					if(count<maxQueue){
+						dataQueue[count]= temp;
+						count++;
+					}					
+					break;
+				 }
+				 
+				 else if(key==73)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					
+					pivot_x=x1;
+					pivot_y=y1;
+					scale_point(x2,y2,1.1,1.1);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					scale_point(x3,y3,1.1,1.1);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					scale_point(x4,y4,1.1,1.1);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+					 
+				 }
+				 else if(key==81)//jika di tekan .
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}					
+					
+					pivot_x=x1;
+					pivot_y=y1;
+					scale_point(x2,y2,0.9,0.9);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					scale_point(x3,y3,0.9,0.9);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					scale_point(x4,y4,0.9,0.9);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+					 
+				 }
+				 else if(key==51)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=x1;
+					pivot_y=y1;
+					rotate_point(x2,y2,-45);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					rotate_point(x3,y3,-45);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					rotate_point(x4,y4,-45);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+					 
+				 }
+				 else if(key==52)
+				 {
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=x1;
+					pivot_y=y1;
+					rotate_point(x2,y2,45);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					rotate_point(x3,y3,45);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					rotate_point(x4,y4,45);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+					 
+				 }
+				 else if(key==77)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}
+					pivot_x=x1;
+					pivot_y=y1;
+					translate_point(x1,y1,1,0);
+					x1=P1[0][0];
+					y1=P1[0][1];
+					translate_point(x2,y2,1,0);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					translate_point(x3,y3,1,0);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					translate_point(x4,y4,1,0);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+
+				 }
+				 else if(key==80)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
+					translate_point(x1,y1,0,1);
+					x1=P1[0][0];
+					y1=P1[0][1];
+					translate_point(x2,y2,0,1);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					translate_point(x3,y3,0,1);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					translate_point(x4,y4,0,1);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+
+				 }
+				 else if(key==72)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
+					translate_point(x1,y1,0,-1);
+					x1=P1[0][0];
+					y1=P1[0][1];
+					translate_point(x2,y2,0,-1);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					translate_point(x3,y3,0,-1);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					translate_point(x4,y4,0,-1);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
+
+				 }
+				 else if(key==75)//jika tombol kanan ditekan
+				 {			
+					clearviewport();
+
+					setcolor(WHITE);
+					DrawKotak(2,2,518,427);
+					
+					for(int i=0;i<count;i++){
+						
+						dataQueue[i].Draw();
+					
+					}				 
+					translate_point(x1,y1,-1,0);
+					x1=P1[0][0];
+					y1=P1[0][1];
+					translate_point(x2,y2,-1,0);
+					x2=P1[0][0];
+					y2=P1[0][1];
+					translate_point(x3,y3,-1,0);
+					x3=P1[0][0];
+					y3=P1[0][1];
+					translate_point(x4,y4,-1,0);
+					x4=P1[0][0];
+					y4=P1[0][1];
+					
+					DrawKotak1(x1, y1, x2,y2, x3, y3,x4,y4);
 
 				 }
 				 
