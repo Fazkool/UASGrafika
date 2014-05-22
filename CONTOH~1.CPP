@@ -58,7 +58,7 @@ void draw_color_panel()
    DrawKotak(4,431,635,457);
    setcolor(RED);
    settextstyle(TRIPLEX_FONT,0,2);
-   outtextxy(10,431,"Colors : ");
+   outtextxy(10,431,"FILL ");
  
    for( c = 1 ; c <= 15 ; c++ )
    {
