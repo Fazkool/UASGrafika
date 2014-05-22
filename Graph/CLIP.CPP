@@ -156,7 +156,25 @@ void smartClip(int xStart,int yStart,int xEnd,int yEnd){
 	
 }
 
-void clipp(int xStart,int yStart,int xEnd,int yEnd){
+void clipp(int xStartIn,int yStartIn,int xEndIn,int yEndIn){
+
+	int xStart, yStart, xEnd, yEnd;
+
+	if(xStartIn > xEndIn){
+		xStart = xEndIn;
+		xEnd = xStartIn;
+	}else{
+		xStart = xStartIn;
+		xEnd = xEndIn;
+	}
+	if(yStartIn > yEndIn){
+		yStart = yEndIn;
+		yEnd = yStartIn;
+	}else{
+		yStart = yStartIn;
+		yEnd = yEndIn;
+	}
+
 	for(int j = 0;j<479;j++){
 		for(int i = 0;i<639;i++){
 			if(i < xStart || i >xEnd || j < yStart || j>yEnd ){
