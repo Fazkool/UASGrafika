@@ -58,7 +58,7 @@ void draw_color_panel()
    DrawKotak(4,431,635,457);
    setcolor(RED);
    settextstyle(TRIPLEX_FONT,0,2);
-   outtextxy(10,431,"FILL ");
+   outtextxy(10,431,"Colors : ");
  
    for( c = 1 ; c <= 15 ; c++ )
    {
@@ -89,6 +89,11 @@ void draw_shape_panel()
       top += 30;
    }
    DrawKotak(left, top, left+100, top+25);
+   top += 30;
+   DrawKotak(left, top, left+100, top+25);
+   top += 30;
+   DrawKotak(left, top, left+100, top+25);
+   top += 30;
    boundaryFill4(550,50, RED, WHITE);
    DrawKotak(550, 83, 558, 91);
    lineDDA(585, 50, 625, 65);
@@ -124,6 +129,11 @@ void refresh()
       top += 30;
    }
    DrawKotak(left, top, left+100, top+25);
+   top += 30;
+   DrawKotak(left, top, left+100, top+25);
+   top += 30;
+   DrawKotak(left, top, left+100, top+25);
+   top += 30;
    boundaryFill4(550,50, RED, WHITE);
    DrawKotak(550, 83, 558, 91);
    lineDDA(585, 50, 625, 65);
@@ -131,6 +141,8 @@ void refresh()
    elips(605, 87, 10, 10);
    DrawKotak(584, 109, 625, 126);
    outtextxy(550,135,"CLEAR");
+   outtextxy(550,165,"CLIP");
+   outtextxy(550,195,"ACLIP");
    setcolor(RED);
   /* outtextxy(530,45,"tes");
    outtextxy(530,75,"Line");
@@ -172,8 +184,12 @@ char change_shape(int x, int y)
    cek=0;
       return 'r';
 	}
-   else if ( x > 529 && x < 625 && y > 135 && y < 170 )
+   else if ( x > 529 && x < 625 && y > 135 && y < 160 )
       return 'c';
+   else if ( x > 529 && x < 625 && y > 165 && y < 190 )
+      return 'p';
+   else if ( x > 529 && x < 625 && y > 195 && y < 220 )
+      return 'a';
    return '0';
 }
  
@@ -371,10 +387,10 @@ int main()
             closegraph();
             exit(0);
          }
-		 else
+		/* else
 		 {
 			printf("%d",key);
-		 }
+		 }*/
       }
  
       getmousepos(&button,&x,&y);
@@ -1103,7 +1119,12 @@ int main()
 			  }
 
 	 }
-		
+			else if(ch == 'p') {
+			}
+			
+			else if(ch == 'a') {
+			
+			}
 
 	 showmouseptr();
 	 cout<<"isi queue : "<<count<<"\n";
