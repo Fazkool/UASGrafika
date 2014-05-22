@@ -2,6 +2,9 @@
 #include<conio.h>
 #include<graphics.h>
 #include<math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream.h>
 
 int rx1, ry1, rx2, ry2;
 int i,j=0,n;
@@ -102,7 +105,82 @@ void draw_rectangle(int xAwal, int yAwal, int xAkhir, int yAkhir)
 	getch();
 }
 
+//XSTART = MOUSE AWAL
+//XEND = MOUSE AKHIR
+void smartClip(int xStart,int yStart,int xEnd,int yEnd){
+	//INISIALISASI ARRAY
+	int i = 0;
+	int j = 0;
+	
+	//PERSIAPAN ARRAY GRAPHIC
+	//MEMBUAT ARRAY OF ARRAY DINAMIS
+	int** arrayGraph = (int**) malloc (640 * sizeof (int*));
+	//MENGISI ARRAY DINAMIS
+	for(i = 0;i<640;i++){
+		arrayGraph[i] = (int*) malloc (480 * sizeof(int));
+	}
+	
+	//printf("%d %d",getpixel(200,0),getpixel(201,0));
+	
+	// cout << getpixel(200,0) << endl;
+	// cout << getpixel(201,0) << endl;
+	
+	//for(i = 0;i<16;i++)
+	
+	for(j = yStart;j<yEnd;j++){
+		for(i = xStart;i<xEnd;i++){
+			arrayGraph[i][j] = getpixel(i,j);
+			if(getpixel(i,j) == WHITE){
+				cout << i <<" " << j << endl;
+				//cout << "warna putih";
+				//getch();
+			}
+			// if(getpixel(i,j)== WHITE){
+				// cout << i << " " << j << endl;
+				// putpixel(i,j);
+			// }
+			//cout <<i<<" "<< j << " " << arrayGraph[i][j] endl;
+		}
+	}
+	cout << getpixel(200,151);
+					
+	
+	//PENGGAMBARAN ULANG
+	//cleardevice();
+	cout << arrayGraph[200][150];
+	for(j = yStart;j<yEnd;j++){
+		for(i = xStart;i<xEnd;i++){
+			putpixel(i,j,arrayGraph[i][j]);
+		}
+	}
+	
+}
+
+void clipp(int xStart,int yStart,int xEnd,int yEnd){
+	for(int j = 0;j<479;j++){
+		for(int i = 0;i<639;i++){
+			if(i < xStart || i >xEnd || j < yStart || j>yEnd ){
+				putpixel(i,j,BLACK);
+			}
+		}
+	}
+}
+
 void main()
 {
-	draw_rectangle(100,100,300,300);
+	//draw_rectangle(100,100,300,300);
+	int gd=DETECT,gm;
+	int i,n;
+	float x[8],y[8],m;
+	clrscr();
+	initgraph(&gd,&gm,"C:\\TC\\BGI");
+
+	line(0,0,639,479);
+	line(639,0,0,479);
+	line(200,0,200,479);
+	//line(0,200,639,200);
+	clipp(100,100,300,300);
+	//line(100,100,300,300);
+	getch();
 }
+
